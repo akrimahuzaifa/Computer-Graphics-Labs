@@ -1,0 +1,21 @@
+Adminitrative:
+Accrording to Edward Angel, Dave Shreiner
+" 2.4.4 Triangulation
+ We have been using the terms polygon and triangle somewhat interchangeably. If we
+ are interested in objects with interiors, general polygons are problematic. A set of
+ vertices may not all lie in the same plane or may specify a polygon that is neither
+ simple nor convex. Such problems do not arise with triangles. As long as the three
+ vertices of a triangle are not collinear, its interior is well defined and the triangle is
+ simple, flat, and convex. Consequently, triangles are easy to render, and for these
+ reasons triangles are the only fillable geometric entity that WebGL recognizes. In
+ practice we need to deal with more general polygons. The usual strategy is to start
+ with a list of vertices and generate a set of triangles consistent with the polygon
+ defined by the list, a process known as triangulation." 
+(Page#58 Chapter 2 Graphics Programming)
+
+Tutorial Improvements:
+By following the Mozilla Documentation (https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API/Tutorial) for get started. HTML code need to be modify as the stated code directly accessing the js file prompt to error in the console and does not run. Or you have to install node js (cmd: npm install -g http-server) and start the http server(cmd: http-server) where you files are in CLI. And alot of run time arrors can be fixed on latest version of browsers.
+
+
+
+
