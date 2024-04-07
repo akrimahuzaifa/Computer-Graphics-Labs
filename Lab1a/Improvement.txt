@@ -15,7 +15,3 @@ Accrording to Edward Angel, Dave Shreiner
 
 Tutorial Improvements:
 By following the Mozilla Documentation (https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API/Tutorial) for get started. HTML code need to be modify as the stated code directly accessing the js file prompt to error in the console and does not run. Or you have to install node js (cmd: npm install -g http-server) and start the http server(cmd: http-server) where you files are in CLI. And alot of run time arrors can be fixed on latest version of browsers.
-
-
-
-

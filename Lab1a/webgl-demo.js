@@ -1,4 +1,4 @@
-import { initBuffers } from "./init-buffers.js";
+import { initCubeBuffers, initPyramidBuffers, initConeBuffers } from "./init-buffers.js";
 import { drawScene } from "./draw-scene.js";
 
 
@@ -117,7 +117,11 @@ function main() {
 
     // Here's where we call the routine that builds all the
     // objects we'll be drawing.
-    const buffers = initBuffers(gl);
+    const buffers = {
+        cube: initCubeBuffers(gl),
+        pyramid: initPyramidBuffers(gl),
+        cone: initConeBuffers(gl),
+    };
 
     // Draw the scene
     drawScene(gl, programInfo, buffers);

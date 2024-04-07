@@ -1,35 +1,119 @@
-function initBuffers(gl) {
-  const positionBuffer = initPositionBuffer(gl);
+function initCubeBuffers(gl) {
+  const positionBuffer = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+
+  const positions = [
+    // Front face
+    -1.0, -1.0,  1.0,
+     1.0, -1.0,  1.0,
+     1.0,  1.0,  1.0,
+    -1.0,  1.0,  1.0,
+
+    // Back face
+    -1.0, -1.0, -1.0,
+    -1.0,  1.0, -1.0,
+     1.0,  1.0, -1.0,
+     1.0, -1.0, -1.0,
+
+    // Top face
+    -1.0,  1.0, -1.0,
+    -1.0,  1.0,  1.0,
+     1.0,  1.0,  1.0,
+     1.0,  1.0, -1.0,
+
+    // Bottom face
+    -1.0, -1.0, -1.0,
+     1.0, -1.0, -1.0,
+     1.0, -1.0,  1.0,
+    -1.0, -1.0,  1.0,
+
+    // Right face
+     1.0, -1.0, -1.0,
+     1.0,  1.0, -1.0,
+     1.0,  1.0,  1.0,
+     1.0, -1.0,  1.0,
+
+    // Left face
+    -1.0, -1.0, -1.0,
+    -1.0, -1.0,  1.0,
+    -1.0,  1.0,  1.0,
+    -1.0,  1.0, -1.0,
+  ];
+
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
 
   return {
     position: positionBuffer,
+    numVertices: 36 // 6 faces, 2 triangles per face, 3 vertices per triangle
   };
 }
 
-function initPositionBuffer(gl) {
-  // Create a buffer for the square's positions.
+function initPyramidBuffers(gl) {
   const positionBuffer = gl.createBuffer();
-
-  // Select the positionBuffer as the one to apply buffer
-  // operations to from here out.
   gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
 
-  // Now create an array of positions for the square.
-  //const positions = [1.0, 1.0, -1.0, 1.0, 1.0, -1.0, -1.0, -1.0];
+  const phi = (1 + Math.sqrt(5)) / 2; // Golden ratio
 
-  // Modify the positions array to define a triangle
   const positions = [
-    0.0, 1.0,
-    -1.0, -1.0,
-    1.0, -1.0,
+    // Base
+    -1.0, -1.0, -1.0,
+     1.0, -1.0, -1.0,
+     1.0, -1.0,  1.0,
+    -1.0, -1.0,  1.0,
+
+    // Front face
+     0.0,  1.0,  0.0,
+    -1.0, -1.0,  1.0,
+     1.0, -1.0,  1.0,
+
+    // Right face
+     0.0,  1.0,  0.0,
+     1.0, -1.0,  1.0,
+     1.0, -1.0, -1.0,
+
+    // Back face
+     0.0,  1.0,  0.0,
+     1.0, -1.0, -1.0,
+    -1.0, -1.0, -1.0,
+
+    // Left face
+     0.0,  1.0,  0.0,
+    -1.0, -1.0, -1.0,
+    -1.0, -1.0,  1.0,
   ];
 
-  // Now pass the list of positions into WebGL to build the
-  // shape. We do this by creating a Float32Array from the
-  // JavaScript array, then use it to fill the current buffer.
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
 
-  return positionBuffer;
+  return {
+    position: positionBuffer,
+    numVertices: 18 // 1 base triangle + 3 faces with 3 vertices each
+  };
 }
 
-export { initBuffers };
+function initConeBuffers(gl) {
+  const positionBuffer = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+
+  const radius = 1.0;
+  const height = 2.0;
+  const segments = 20;
+
+  const positions = [];
+  for (let i = 0; i <= segments; i++) {
+    const theta = (i / segments) * 2 * Math.PI;
+    const x = radius * Math.cos(theta);
+    const y = radius * Math.sin(theta);
+    positions.push(x, y, 0.0);
+  }
+  // Add tip vertex
+  positions.push(0.0, 0.0, height);
+
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
+
+  return {
+    position: positionBuffer,
+    numVertices: segments + 1 // Including the tip vertex
+  };
+}
+
+export { initCubeBuffers, initPyramidBuffers, initConeBuffers };
