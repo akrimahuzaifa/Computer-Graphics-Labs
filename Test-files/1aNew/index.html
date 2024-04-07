@@ -145,13 +145,94 @@
         var projectionMatrix = mat4.create();
         mat4.perspective(projectionMatrix, Math.PI/4, canvas.width/canvas.height, 1, 100);
 
-        // Set up the model-view matrix
+        // Set up the initial model-view matrix
         var modelViewMatrix = mat4.create();
-        mat4.lookAt(modelViewMatrix, [5, 5, 5], [0, 0, 0], [0, 1, 0]);
+        var cameraPosition = vec3.fromValues(5, 5, 5);
+        var targetPosition = vec3.fromValues(0, 0, 0);
+        var upVector = vec3.fromValues(0, 1, 0);
+        mat4.lookAt(modelViewMatrix, cameraPosition, targetPosition, upVector);
 
         // Set the shader uniforms
         gl.uniformMatrix4fv(u_ProjectionMatrix, false, projectionMatrix);
         gl.uniformMatrix4fv(u_ModelViewMatrix, false, modelViewMatrix);
+
+        // Define variables for mouse interaction
+        var isDragging = false;
+        var lastMouseX = null;
+        var lastMouseY = null;
+
+        // Function to handle mouse down event
+        function handleMouseDown(event) {
+            isDragging = true;
+            lastMouseX = event.clientX;
+            lastMouseY = event.clientY;
+        }
+
+        // Function to handle mouse up event
+        function handleMouseUp(event) {
+            isDragging = false;
+        }
+
+        // Function to handle mouse move event
+        function handleMouseMove(event) {
+            if (!isDragging) return;
+
+            var deltaX = event.clientX - lastMouseX;
+            var deltaY = event.clientY - lastMouseY;
+
+            // Translate camera position based on mouse movement
+            var translationVector = vec3.fromValues(deltaX * 0.01, -deltaY * 0.01, 0);
+            var translationMatrix = mat4.create();
+            mat4.translate(translationMatrix, translationMatrix, translationVector);
+            mat4.multiply(modelViewMatrix, translationMatrix, modelViewMatrix);
+
+            lastMouseX = event.clientX;
+            lastMouseY = event.clientY;
+
+            // Update the uniform
+            gl.uniformMatrix4fv(u_ModelViewMatrix, false, modelViewMatrix);
+            // Draw the scene
+            gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+            gl.drawElements(gl.TRIANGLES, indices.length, gl.UNSIGNED_SHORT, 0);
+        }
+
+        // Add event listeners for mouse interaction
+        canvas.addEventListener('mousedown', handleMouseDown);
+        canvas.addEventListener('mouseup', handleMouseUp);
+        canvas.addEventListener('mousemove', handleMouseMove);
+
+        // Function to handle keyboard input
+        function handleKeyDown(event) {
+            var translationVector = vec3.create();
+            switch(event.key) {
+                case 'ArrowLeft':
+                    vec3.set(translationVector, -0.1, 0, 0);
+                    break;
+                case 'ArrowRight':
+                    vec3.set(translationVector, 0.1, 0, 0);
+                    break;
+                case 'ArrowUp':
+                    vec3.set(translationVector, 0, 0.1, 0);
+                    break;
+                case 'ArrowDown':
+                    vec3.set(translationVector, 0, -0.1, 0);
+                    break;
+            }
+
+            // Translate camera position based on keyboard input
+            var translationMatrix = mat4.create();
+            mat4.translate(translationMatrix, translationMatrix, translationVector);
+            mat4.multiply(modelViewMatrix, translationMatrix, modelViewMatrix);
+
+            // Update the uniform
+            gl.uniformMatrix4fv(u_ModelViewMatrix, false, modelViewMatrix);
+            // Draw the scene
+            gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+            gl.drawElements(gl.TRIANGLES, indices.length, gl.UNSIGNED_SHORT, 0);
+        }
+
+        // Add event listener for keyboard input
+        window.addEventListener('keydown', handleKeyDown);
 
         // Clear the canvas
         gl.clearColor(0.9, 0.9, 0.9, 1.0);
