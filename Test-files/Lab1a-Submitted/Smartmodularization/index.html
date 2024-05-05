@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WebGL Scene with 3D Shapes</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gl-matrix/2.8.1/gl-matrix-min.js"></script>
+    <script src="webglUtility.js" type="module"></script>
+    <script src="shapes.js" type="module"></script>
+    <script src="camera.js" type="module"></script>
+</head>
+<body>
+    <canvas id="webgl-canvas" width="800" height="600"></canvas>
+    <script type="module">
+        import { WebGLUtility } from './webglUtility.js';
+        import { Shapes } from './shapes.js';
+        import { Camera } from './camera.js';
+
+        WebGLUtility.init();
+
+        Shapes.init();
+        Shapes.setupBuffers();
+        Shapes.draw();
+
+        Camera.init();
+
+        document.getElementById('webgl-canvas').addEventListener('mousemove', Camera.handleMouseMove);
+        window.addEventListener('keydown', Camera.handleKeyDown);
+    </script>
+</body>
+</html>
